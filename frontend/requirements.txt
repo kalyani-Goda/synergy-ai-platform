@@ -1,0 +1,9 @@
+# UI Framework
+streamlit
+
+# HTTP Client (to talk to Backend)
+requests
+
+# Config
+python-dotenv
+PyPDF2

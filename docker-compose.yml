@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  # ----------------------------
+  # BACKEND SERVICE
+  # ----------------------------
+  backend:
+    build: ./backend              # Uses backend/Dockerfile
+    container_name: synergy_backend
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./backend/.env            # Loads GOOGLE_API_KEY from here
+    volumes:
+      - ./data:/app/data          # Persist the SQLite database
+    restart: always
+
+  # ----------------------------
+  # FRONTEND SERVICE
+  # ----------------------------
+  frontend:
+    build: ./frontend             # Uses frontend/Dockerfile
+    container_name: synergy_frontend
+    ports:
+      - "8501:8501"
+    environment:
+      # This tells the frontend container how to talk to the backend container
+      # "http://backend:8000" works because of Docker's internal DNS
+      - BACKEND_URL=http://backend:8000
+    depends_on:
+      - backend                   # Waits for backend to start
+    restart: always
